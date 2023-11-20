@@ -1,0 +1,183 @@
+/**********************************************************
+* Project 3: Unzipping and Zipping
+* CS 15
+* README
+* Charlie Biskupiak
+* Project Three, Zap
+* CS 15
+*********************************************************/
+
+Compile/run:
+     - Compile using
+            make zap
+     - run executable with
+            ./zap [zap|unzap] input.txt output.txt
+
+
+Program Purpose:
+
+The purpose of the program is to demonstrate how the use of data structures
+can be implemented into a real-life application, a file compressor and 
+decompressor. 
+
+The entire operation relies on the huffman coding tree. It is a binary 
+tree where all of the values are leaves and it is ordered by frequency.
+This is important to the program because we can compress the amount of 
+bits being used by a text file by replacing the chars with binary 
+translations. 
+
+The program is ran thru HuffmanCoder.cpp. It houses all of the functions
+and various memeber variables to make the program work. For example, 
+a priority queue full of nodes, where frequency is the comparator. 
+This allows the building of the huffman coding tree to be much simpler. 
+
+The program compresses and decompresses whatever the client inputs 
+as the 3rd element in the command line and produces the result 
+in the output file. 
+
+
+Acknowledgements: 
+I looked at C++ vector pages for help with vectors 
+and I used the same page but for priority queues as well.
+
+Files: 
+
+main.cpp:
+     main.cpp handles the terminal inputs and creates an instance of the 
+     zapper. This is all that it does. It is basically the connector 
+     between the client and the HuffmanCoder class. However it also 
+     checks to make sure the correct number of inputs from the 
+     command line has been inputted
+
+HuffmanCoder.cpp:
+     Implementation of HuffmanCoder class.  Main
+     functionality of running zapper. This file is the heavy
+     lifter. Within this file, there are multiple functions.
+     Each function works together to make the entire 
+     zapper work. It handles both compressing and decompressing
+
+HuffmanCoder.h:
+     Interface of HuffmanCoder class. HuffmanCoder contains functions 
+     that each have a single purpose/piece that adds up to the 
+     entire zapper. 
+     Additionally, the data structures and member variables all serve a 
+     distinct purpose in creating the calculator. Its interaction with 
+     other classes is mainly manipulating data within HuffmanTreeNode class 
+     and creating instances of nodes. It also utilizes phaseOne to help
+     deal with serializing and deserializing huffman trees.  
+
+various testing files: 
+    Each of these files was used to help test the overall functionality 
+    of the program. These were inputted in the command line and diffed
+    the cout and cerr with the demo file for zap and then diffed with 
+    the original file for unzap 
+     - all_conll_english.txt
+     - banana_apple.txt
+     - banana.txt 
+     - ecoli.coli
+     - hi.txt
+     - works_of_shakespeare.txt
+     - input.txt -- random key mashing 
+     - 1input.txt -- empty 
+     - 2input.txt -- one letter, repeated
+     - 3input.txt -- one letter 
+     - .zap files of .txt files were my own output files
+     - .zapp files of .txt files were the demo's version 
+     All input files made by me will be turned in. The ones made by 
+     CS15 won't because you guys know what's in there 
+     I made inputs 1,2,3 in VScode and I was having syncing trouble 
+     so they won't submit.
+     Their contents were: 
+     1 - 
+     2 - 555555
+     3 - ' 
+
+HuffmanTreeNode.h 
+     Interface and constructor of the node class. Initializes 
+     a node point with a value and a frequency, along with two 
+     pointers to possible children 
+
+phaseOne.cpp 
+     Implementation of the deserialize and serialize function 
+     for simplifying serialization and deserialization of 
+     huffman trees
+
+phaseOne.h
+     Declares the deserialize and serialzie function. This function is used 
+     in the HuffmanCoder.cpp to make trees or summaries of them 
+
+unit_tests.h 
+     This file contains all of the neccesary tests for 
+     the phaseOne functions. 
+     It tests basic functionality
+     of all functions, and then tests for edge cases (many variables, 
+     no variables, adding and deleting multiple variables, etc.)
+
+Makefile
+     Makes all of the executables needed for testing and running 
+     this program. 
+
+
+Note:  the program should handle all cases.
+
+Data Structures: priorityQueues (queue), vector 
+
+priorityQueue (stack): 
+     For this project, a priority queue was utilized to help deal with the 
+     countless amount of nodes made during computation. It is a queue that
+     puts variables that are smaller at the front of the queue, so that when 
+     the huffman tree can be made, the smallest frequencies are the first to 
+     be linked with a parent, which is how the trees are made. 
+     Because it is a queue, it is front access only and back 
+     insertion only. Anytime access isn't possible on a queue, but that was 
+     not its intended purpose anyways. 
+     To get through the entire PQ it would take O(n) time, where n is the 
+     number of elements in the queue. 
+
+vector   
+     The vector was used to store extra information on nodes so that 
+     information access and retrieval was quick. One pitfall of this
+     data structure was the fact that it wasn't sorted. While access
+     and retrieval are O(1) time technically, the way the vector was 
+     utilized made it O(n) time because the program has to iterate 
+     over possibily the entire vector to get to the value it wants to 
+     access. 
+     This led to a long waiting time for the 5 mB files. 
+
+Testing:
+As previously stated. All basic testing was done in the unit_tests.h 
+file. All functions were tested for basic functionality once, and then there 
+were additional tests to test some of the edge cases. For example, large 
+amounts of trees or strings, empty variables, very short variables, etc. 
+
+The testing method shifted to 
+diffing from the command line with both the demo file and the files I made 
+and was provided with from the spec. Both cout and cerr were diffed 
+
+One bug that I came across while doing this was that the information in 
+my binary structs were not saving when I was modifying them. I figured
+out that I needed each binary instance to be a pointer to a binary 
+in order to do it. 
+
+Part that you found most difficult: 
+The most difficult part was probably dealing with extremely long 
+input files. My solution was not very time efficient so it had a very 
+hard time dealing with the longer input files. It would take forever. 
+
+Algorithm Explanantion: 
+I relied heavily on two data structures to run my program. 
+1. A priority queue to hold all of the nodes for my huffman tree
+before it was made 
+2. An arraylist (vector) that held structs of information on each
+of the chars.
+When I was encoding, I would build up the structs and then make the 
+tree, and then with the tree I would translate the chars into binary 
+and store them in their already-made structs. This made it easy to
+find them when I needed to encode the message. However, it was a 
+time complexity-expensive choice to make. 
+For decoding, I would do the same thing by relying on the serialized
+tree to make the tree in order to fill out the struct information. 
+But overall, it was the same process, and was also not very time 
+efficient in the long run. 
+
+I spent about 25 hours on this assingment in total 
