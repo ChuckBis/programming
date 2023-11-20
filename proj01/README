@@ -1,0 +1,165 @@
+/**********************************************************
+* Project 1: Metro Simulator
+* CS 15
+* README
+* Charlie Biskupiak
+* Project One, the MetroSim 
+* CS 15
+*********************************************************/
+
+Compile/run:
+     - Compile using
+            make MetroSim
+     - run executable with
+            ./MetroSim stationsFile passFile [commands]
+
+
+Program Purpose:
+
+The purpose of the program is to demonstrate how the use of data structures
+can be implemented into a real-life application, like a train simulator. 
+What the program does is take in passenger information and work with it 
+accordingly, storing the ids, adding the passenger to the train, and 
+then dropping them off when it is time to drop them off.
+
+PassengerQueue is the first building block of this operation, it is 
+a queue that holds passengers and their information. It enqueues 
+and dequeues when directed by the rest of the program 
+
+MetroSim runs all of the simulation. While taking in user input, the 
+program is designed to mimic the green line in Boston, by using 
+various data structures.
+
+
+Acknowledgements: 
+I looked at the file I/O handout for help with streams 
+I looked at C++ vector documentation (the one linked in spec)
+
+Files: 
+
+main.cpp:
+     main.cpp handles the terminal inputs and calls on various simulation 
+     functions in the MetroSim.cpp file. The most important part of this 
+     file is the while loop that runs the simulation process. Printing 
+     board and taking in commands. At the end, it is the file that 
+     produces the output file. 
+
+MetroSim.cpp:
+     Implementation of MetroSim class.  Main
+     functionality of running the Metro Simulation. This file is the heavy
+     lifter. Within this file, there are multiple functions, some of which
+     call other functions to take the load off of main.cpp and to keep it 
+     under 30 lines. Each function works together to make the entire 
+     simulation work. 
+
+MetroSim.h:
+     Interface of MetroSim class. MetroSim contains functions that each have 
+     a single purpose/piece that adds up to the entire simulation. 
+     Additionally, the data structures and member variables all serve a 
+     distinct purpose in creating the simulation. Its interaction with 
+     other classes is mainly manipulating data within passengerqueue 
+     and creating instances of passengers. 
+
+stations.txt:
+     an example file containing a list of stations.
+
+test_commands.txt:
+     sample list of commands that you could give to the simulator
+
+the_metroSim:
+     reference implementation for students to see how 
+
+PassengerQueue.h 
+     Interface of passengerQueue class
+
+PassengerQueue.cpp
+     Implementation of the passengerQueue class. Provides all neccesary 
+     operations for a queue that holds passengers, the queue itself 
+     is a linked list that has the client functionality of a queue 
+     it is able to also print out the entire queue, which will be 
+     beneficial for displaying car and station passenger information
+
+Passenger.h 
+     Interface and constructor of the passenger class. Initializes 
+     a passenger with its id number, and travel information
+
+Passenger.cpp 
+     Implementation of the print function for the passenger class 
+     This function will print the id number, home number and 
+     destination number
+
+unit_tests.h 
+     This file contains all of the neccesary tests for 
+     the passenger and passengerQueue classes. It tests basic functionality
+     of all functions, and then tests for edge cases (many variables, 
+     no variables, adding and deleting multiple variables, etc.)
+
+drivertest.cpp
+     This file was used to test the simulation while in development and 
+     when it was finished. This way, I could keep the stations file and 
+     use it how I wanted. With unit_tests, I would have to jump through 
+     some hoops to have access to the stations file, since I don't have 
+     access to the driver file. 
+
+edgecase1,2,3,4.txt 
+     These files are the edge cases that I focused on and talked about 
+     during my meeting with the TA last wednesday. They act like the 
+     command input files and give specific instructions to make 
+     an edge case appear. These were run thru metrosim and then 
+     the outputs were diffed with the demo program 
+
+
+
+Note:  the program should handle all cases.
+
+Data Structures: Linked lists (queue) and Arraylists 
+
+Linked list (queue): 
+     For this project, the linked list was modified to only be used as a queue
+     for the client. Because of this, it is front access only and back 
+     insertion only. Anytime access isn't possible on a queue, and it is 
+     O(n) time for a linked list, so I only used it as a queue, and not to 
+     hold my stations or cars. Insertion is extremely simple, as it is back 
+     access and in O(1) time. 
+
+ArrayList 
+     Becuase access is extremely quick and simple on an arraylist, I elected 
+     to use it to store my stations and train cars. While insertion is O(n)
+     at its worst, I only add variables once (at the beginning of the sim) 
+     Otherwise, it is all access (O(1)) with a member variable keeping track  
+     of what index I am at. 
+
+Testing:
+
+As previously stated. All passengerQueue testing was done in the unit_tests.h 
+file. All functions were tested for basic functionality once, and then there 
+were additional tests to test the edge cases. For example, large amounts
+of passengers, no passengers, only one passenger, removing passengers
+and adding passengers quickly.
+
+drivertest.cpp was what I used to test all of the functions for the metrosim
+class. It has a main, so I can run it on the command line and input my own 
+files and test the cin and cout. I started with just 
+testing the basic functionality of each of the functions.
+
+I then moved onto the edge cases using a bunch of text files that I diffed. 
+with the demo file 
+I went back to my original main for this. A few cases to mention are: 
+Loading up a passengerQueue for stress testing, loading a passenger on 
+at the current station. A passenger having the same get-on/get-off station.
+
+
+
+While diffing the command_file, a couple of bugs I ran into that were addressed
+were: repeating output statements, (fixed by setting stringstream back to "") 
+and skipping passengers that were made while at the stop (fixed by changing
+order of picking up and dropping off)
+
+
+Note: This assignment comes partially implemented, but student must also
+create the driver and add class functionality.
+
+Part that you found most difficult: 
+The most difficult part was probably file input and especially output. I have 
+never worked with file output before and I found myself frequently going back 
+to the lesson and the handouts for reference.
