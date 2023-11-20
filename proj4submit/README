@@ -1,0 +1,304 @@
+/**********************************************************
+* Project 4: The grep knockoff
+* CS 15
+* README
+* Charlie Biskupiak / Jack Edwards
+* Project Four, Gerp
+* CS 15
+*********************************************************/
+
+Compile/run:
+     - Compile using
+            make gerp
+     - run executable with
+            ./gerp [directory] outputFile
+
+
+Program Purpose:
+
+The purpose of the program is to demonstrate how the use of data structures
+can be implemented into a real-life application, a file searcher 
+
+The entire operation relies on a hashtable. It is an array  
+where each of the indices are buckets that contain keys, instances and pointers
+for chaining. 
+This is important to the program because we can store strings as keys, 
+which makes searching and access very easy for the hashtable. The pointers
+are used for chaining colliding elements without taking up a different 
+index. 
+The program is ran thru gerp.cpp. It houses all of the functions
+and various memeber variables to make the program work. For example, 
+the hashtable, where any word in the directory is stored. 
+
+The program reads thru an entire directory and stores the words of each 
+file in a hashtable, so when the client wants to see the times it was
+used in the directory, the searching is very simple. 
+
+
+Acknowledgements: 
+     C++ website for various implementation things
+          pairs
+          vectors 
+          toLower 
+          etc. 
+
+Files: 
+
+main.cpp:
+     main.cpp handles the terminal inputs and creates an instance of  
+     gerp. This is all that it does. It is basically the connector 
+     between the client and the gerp class. However it also 
+     checks to make sure the correct number of inputs from the 
+     command line has been inputted
+
+unit_tests.h 
+     This file contains all of the neccesary tests for 
+     the phaseOne functions. 
+     It tests basic functionality
+     of all functions, and then tests for edge cases (many variables, 
+     no variables, adding and deleting multiple variables, etc.)
+
+Makefile
+     Makes all of the executables needed for testing and running 
+     this program. 
+
+gerp.cpp 
+     Implementation of gerp class.  Main
+     functionality of running gerp (file searcher). 
+     This file is the heavy
+     lifter. Within this file, there are multiple functions.
+     Each function works together to make the entire 
+     zapper work. It handles 4 different query cases 
+
+gerp.h 
+     Interface of gerp class. gerp contains functions 
+     that each have a single purpose/piece that adds up to the 
+     entire searching simulation.
+     Many of these functions get called repeatedly, like query 
+     Additionally, the data structures and member variables all serve a 
+     distinct purpose in creating the searcher. Its interaction with 
+     other classes is mainly manipulating data within HashTable class 
+     and accessing its values. It also utilizes stringProcessing to help
+     deal with weirdly inputted queries and file contents  
+
+HashTable.cpp 
+     Implementation of the HashTable class each of the functions 
+     culminate into a working hashtable that has the following 
+     capabilities:
+          adding elements 
+          rehashing when the load factor hits 0.7
+          reporting a specific word's instances back to gerp 
+          recycling its data 
+
+HashTable.h 
+     Interface of the hashtable class. A hashtable starts out 
+     empty with a size of 100 elements. It expects a lot of in-
+     formation to be read in so the array starts very large. 
+     
+     It has a few member variables that help its functionality 
+          size --> save of array 
+          active --> number of active elements in the array 
+               Both of these are used to caluclate the load factor 
+
+stringProcessing.cpp 
+     Houses the function that helps trim words with non alphanumberic 
+     characters to be read into the hashtable and requested by the user
+
+stringProcessing.h 
+     Declares the function named above 
+
+FSTree.h 
+     Provided --> gives functions to help parse thru directories 
+
+
+
+various testing files:
+     demo_directory 
+     - We made a dummy directory, where we held 4 files that were used by 
+     both unit test and the command line testing
+          - input1.txt (the 1,2,3 were used to test the file vector lines)
+          hi
+          im 
+          file1
+          - input2.txt
+          hey 
+          im 
+          file2
+          - input3.txt 
+          hola 
+          soy 
+          file3
+          - input4.txt --> This was used for case sensitivity testing
+          the THe the THE 
+          the the thee thE
+          THE
+          thE
+          the
+     100Words.txt
+          - Actually was the introductory paragraph of my english 1 research 
+          paper. I wanted something bigger than tinyData and something smaller
+          than smallGutenberg. It also allowed me to know every word in the 
+          input. This was used to test the hashtable insertion and expansion
+     testinput.txt 
+          - Gibberish to make sure that words that didn't have any matches 
+          would print out the right thing 
+     testinput1.txt
+          - "yo mama" I wanted to see if it was used anywhere in largegutenberg
+     sampleCommands.txt 
+          - Testing the @i vs sensitive search of both smallGutenberg and demo
+          directory 
+               the
+               @i the
+               @q
+     harderCommands.txt
+          - Testing new words, where either they were used or not (depended on 
+          directory) along with switching directories 
+          why 
+          you 
+          @i thE
+          @i was 
+          @f outputfile.txt
+               - The way i diffed this was that i would run it with ./the_gerp
+               make a copy of outputfile.txt and then run it again with ./gerp
+               and diff the copy with the new outputfile
+               - I also diffed the previous two files as well
+               (my_output.txt, ref_output.txt)
+          the 
+          @q
+
+
+Note:  the program should handle all cases.
+
+Data Structures: 
+     Vector 
+          The vector was used a lot in this program to store various 
+          important data points: 
+          file structs: 
+               This was kept in an array-like form so that it was simple
+               to add files and then extremely easy to parse thru 
+               the vector to get the paths and the lines
+          lines
+               Keeping each line of a file in an arrayList made it 
+               extremely easy to retrieve the line and keep the line 
+               numbers as the index of the arrayList + 1. 
+               Keeping track of this is important for when we had to report
+               it to the outputfile
+          instances
+               We had to keep track of instances somehow, and parsing thru 
+               the instances was easiest with an arraylist using the 
+               .at() function, so we stored them in there. 
+          While access for a vector is O(1), many of the times we use 
+          them happen when we loop thru it, meaning that the access time 
+          complexity is technically O(size) for the applications 
+
+     Hashtable (array)  
+          The main star of this program is the hashtable. Under the hood, 
+          it is an array stored on the heap that holds pointers to a 
+          struct called the bucket.
+          A hashtable makes the most sense for this project because 
+          we are storing and re-grabbing words. This is because the
+          index a bucket (word) is stored at is based on the words 
+          numerical value after going thru a hash function. 
+          Access for a hashtable is O(1) however the way we handled 
+          collisions could make it a little bit longer. 
+               A bucket contains the key (string) a vector of its 
+               instances in the directory, and a pointer to 
+               another bucket if there are any collisions.
+               What this basically does is make each index in the 
+               hashtable turn into a linked list. 
+               What this means is that access for any given key 
+               is best case O(1) and worst case O(collisions at i)
+          When the load factor (number of elements/number of indices)
+          exceeds 0.7, the efficiency of the array begins to go down,
+          so when this happens, the array is expanded and all of the 
+          elements (including the pointer ones) are rehashed and re-
+          inputted into the hashtable 
+
+Testing: *****
+     The first bit of testing was done in unit_tests. 
+          Functions that didn't require a lot of weaving in between 
+          different functions was done in unit_tests. For example, 
+          many of the getters and setters were tested in unit_tests 
+          and then helper functions within gerp or hashtable that 
+          would print the table or vector i was working with. 
+          This allowed for me to visually see the data in a way 
+          I could understand and spot mistakes 
+     After the more basic functions were finished, I did most of 
+     my testing on the command line with the input files I have 
+     listed above. 
+          I would modify the inputfiles or directories to get 
+          different outcomes. For example, making a file empty,
+          making a file contain a word that doesn't exist in 
+          the directory, and having commands like changing 
+          directories or flip-flopping between @i and normal 
+          All of these directories, files, and commands were 
+          passed through both our program and the demo and 
+          diffed to make sure both were all good. 
+
+Part that you found most difficult: *****
+     Dealing with such large amounts of data was very hard. 
+     Specifically, dealing with expanding the array. Initially
+     The indices were not pointers, but just regular buckets, 
+     and the actual table wasn't dynamically allocated. 
+     When we realized we would have to reset everything 
+     after the load factor was reached, we changed our minds. 
+
+Algorithm Explanantion:  *****
+     1. The file vector 
+          The file vector was essential at the beginning and 
+          end of our program. Reading in all of the words 
+          in the files was made a lot easier after we loaded 
+          all of the files into the vector and then read them 
+          out line by line. Recording the instances was made 
+          much simpler after doing this 
+
+          Recording a certain file was O(n) where n is the number 
+          of words in a file 
+
+          Reporting was also made easier because a file's 
+          index in the array was saved so that no looping 
+          was neccesary find the 
+
+          Reporting for each instance was O(1) as the index was known 
+
+     2. The hashTable
+          The hashtable was a dynamically allocated array that was 
+          stored on the heap. It help pointers to a struct called bucket
+          that held the key of a word, an arraylist of its instances, 
+          and a pointer to any other buckets that had the same hashfunction 
+          index. 
+
+          First off, we used a hashtable because we knew we would be looking 
+          up a lot of data with only a keyword. Because of this, a hashtable 
+          made the most sense. 
+          Chaining was handled with our "linked list" type of pointer system.
+          When a new word was added to the table, we would check if it was 
+          already occupied by a bucket. If it was, the new word would point
+          to the word at the front of the index, thus making the new 
+          word the new front. 
+
+          Because of this chaining method, search goes from O(1) best case
+          to O(number of buckets in index) worst case time 
+
+          Expansion was done at load factor 0.7 and was done by creating a new 
+          array with twice the size, and then rehashing all of the elements 
+          before deleting the old array and repointing the new one. 
+
+          Expansion was O(number of elements) time 
+     4. Instances vector 
+          The instances vector is the one thing we think we could have 
+          improved on. Instead of using a struct, we should have just 
+          used a pair, which would have saved us a bit of time when 
+          we had to copy over all of the instances from the table 
+          and send it to gerp.cpp. Overall though, the vector did 
+          its job in storing all of the instances and it was very 
+          simple to loop over the arrayList. 
+     5. Reporting 
+          We dont think there was a more efficient way to report the instances
+          other than just looping thru each one and reporting it. This means 
+          it was O(num instances) time 
+
+Other questions****
+
+
+I spent about 30 hours on this assingment in total 
